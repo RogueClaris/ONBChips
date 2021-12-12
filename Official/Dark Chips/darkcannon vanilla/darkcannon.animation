@@ -1,0 +1,11 @@
+imagePath="C:/Users/Owner/Desktop/ONB Dev/OpenNetBattle/build/Debug/resources/mods/cards/darkcannon/darkcannon.png"
+
+animation state="DEFAULT"
+frame duration="0.05" x="0" y="21" w="23" h="16" originx="2" originy="10"
+frame duration="0.05" x="26" y="21" w="23" h="16" originx="3" originy="10"
+frame duration="0.05" x="52" y="21" w="23" h="16" originx="2" originy="10"
+frame duration="0.05" x="78" y="19" w="36" h="18" originx="2" originy="12"
+frame duration="0.05" x="117" y="12" w="45" h="32" originx="2" originy="19"
+frame duration="0.05" x="165" y="14" w="15" h="28" originx="-23" originy="17"
+frame duration="0.05" x="183" y="9" w="22" h="38" originx="-25" originy="21"
+frame duration="0.05" x="209" y="2" w="24" h="52" originx="-27" originy="28"

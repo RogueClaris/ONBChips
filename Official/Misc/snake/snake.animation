@@ -1,0 +1,10 @@
+imagePath="C:/Users/Owner/Desktop/ONB Play/Release/resources/mods/cards/snake/snake.png"
+
+animation state="APPEAR"
+frame duration="0.033" x="24" y="5" w="15" h="22" originx="10" originy="10"
+frame duration="0.033" x="5" y="5" w="14" h="32" originx="9" originy="10"
+
+animation state="ATTACK"
+frame duration="0.033" x="5" y="5" w="14" h="32" originx="9" originy="10"
+frame duration="0.033" x="24" y="5" w="15" h="22" originx="10" originy="10"
+frame duration="99" x="43" y="17" w="48" h="9" originx="10" originy="-8"

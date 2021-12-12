@@ -1,0 +1,9 @@
+imagePath="C:/Users/Owner/Desktop/ONB Play/Release/resources/mods/cards/Toki wo Tomare/knife.png"
+
+animation state="SPIN"
+frame duration="0.075" x="0" y="0" w="16" h="28" originx="8" originy="14"
+frame duration="0.075" x="31" y="12" w="32" h="13" originx="16" originy="6"
+frame duration="0.075" x="73" y="7" w="23" h="23" originx="12" originy="12"
+
+animation state="POINT"
+frame duration="99" x="31" y="12" w="32" h="13" originx="16" originy="6"
