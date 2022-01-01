@@ -1,8 +1,8 @@
 nonce = function() end
 
 local DAMAGE = 400
-local TEXTURE = Engine.load_texture(_modpath.."spell_dreamsword.png")
-local BUSTER_TEXTURE = Engine.load_texture(_modpath.."spell_sword_blades.png")
+local SLASH_TEXTURE = Engine.load_texture(_modpath.."spell_dreamsword.png")
+local BLADE_TEXTURE = Engine.load_texture(_modpath.."spell_sword_blades.png")
 local AUDIO = Engine.load_audio(_modpath.."sfx.ogg")
 
 function package_init(package) 
@@ -18,6 +18,7 @@ function package_init(package)
     props.element = Element.Sword
     props.description = "3x2 slash ahead!"
 	props.limit = 1
+	props.can_boost = false
 end
 
 function card_create_action(actor, props)
@@ -25,7 +26,7 @@ function card_create_action(actor, props)
     local action = Battle.CardAction.new(actor, "PLAYER_SWORD")
 	action:set_lockout(make_animation_lockout())
     action.execute_func = function(self, user)
-		self:add_anim_action(3,
+		self:add_anim_action(2,
 			function()
 				local hilt = self:add_attachment("HILT")
 				local hilt_sprite = hilt:sprite()

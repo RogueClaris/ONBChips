@@ -39,24 +39,24 @@ function card_create_action(actor, props)
 		buster_anim:load(_modpath.."buster_zapring.animation")
 		buster_anim:set_state("DEFAULT")
 		
-		local cannonshot = create_zap("DEFAULT", user)
+		local cannonshot = create_zap("DEFAULT", user, props)
 		local tile = user:get_tile(user:get_facing(), 1)
 		actor:get_field():spawn(cannonshot, tile)
 	end
     return action
 end
 
-function create_zap(animation_state, user)
+function create_zap(animation_state, user, props)
     local spell = Battle.Spell.new(user:get_team())
     spell:set_texture(TEXTURE, true)
     spell:highlight_tile(Highlight.Solid)
-	spell:set_offset(0.0, 16.0)
+	spell:set_height(16.0)
 	local direction = user:get_facing()
     spell.slide_started = false
 	
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
+            props.damage, 
             Hit.Impact | Hit.Stun | Hit.Flinch, 
             Element.Elec,
             user:get_context(),

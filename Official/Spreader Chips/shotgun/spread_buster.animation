@@ -1,0 +1,8 @@
+imagePath="C:/Users/Owner/Desktop/ONB Dev/OpenNetBattle/BattleNetwork/resources/mods/cards/spreaders/spread_buster.png"
+
+animation state="DEFAULT"
+frame duration="0.05" x="3" y="8" w="21" h="16" originx="2" originy="7"
+frame duration="0.05" x="29" y="8" w="21" h="16" originx="2" originy="7"
+frame duration="0.05" x="56" y="7" w="42" h="17" originx="2" originy="8"
+frame duration="0.05" x="100" y="0" w="49" h="31" originx="2" originy="15"
+frame duration="0.05" x="153" y="0" w="52" h="32" originx="2" originy="15"

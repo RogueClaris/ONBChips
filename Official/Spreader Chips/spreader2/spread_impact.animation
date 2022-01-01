@@ -1,0 +1,9 @@
+imagePath="C:/Users/Owner/Desktop/ONB Dev/OpenNetBattle/BattleNetwork/resources/mods/cards/spreaders/spread_impact.png"
+
+animation state="DEFAULT"
+frame duration="0.05" x="11" y="14" w="12" h="12" originx="6" originy="6"
+frame duration="0.05" x="46" y="8" w="24" h="20" originx="12" originy="10"
+frame duration="0.05" x="89" y="4" w="32" h="32" originx="16" originy="16"
+frame duration="0.05" x="135" y="8" w="26" h="24" originx="13" originy="12"
+frame duration="0.05" x="181" y="6" w="30" h="30" originx="15" originy="15"
+frame duration="0.05" x="228" y="3" w="32" h="31" originx="16" originy="16"

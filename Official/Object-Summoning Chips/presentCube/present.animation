@@ -1,0 +1,11 @@
+imagePath="C:/Users/Owner/Desktop/ONB Play/Release/resources/mods/libs/present/present.png"
+
+animation state="SPAWN"
+frame duration="0.1" x="0" y="0" w="30" h="5" originx="15" originy="36"
+frame duration="0.1" x="37" y="0" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="75" y="0" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="113" y="0" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="151" y="0" w="32" h="40" originx="16" originy="40"
+
+animation state="DEFAULT"
+frame duration="0.05" x="189" y="0" w="32" h="40" originx="16" originy="36"

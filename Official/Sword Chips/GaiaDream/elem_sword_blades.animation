@@ -1,0 +1,17 @@
+imagePath="C:/Users/seven/Desktop/ONB Play/Release Latest/resources/mods/cards/GaiaSword/elem_sword_blades.png"
+
+animation state="DEFAULT"
+frame duration="0.05" x="1" y="24" w="27" h="23" originx="2" originy="7"
+frame duration="0.05" x="30" y="12" w="34" h="30" originx="0" originy="13"
+frame duration="0.05" x="66" y="4" w="66" h="30" originx="16" originy="15"
+frame duration="0.05" x="134" y="4" w="48" h="28" originx="15" originy="15"
+frame duration="0.05" x="186" y="4" w="38" h="26" originx="15" originy="15"
+frame duration="0.05" x="226" y="3" w="19" h="27" originx="15" originy="16"
+
+animation state="WOOD"
+frame duration="0.05" x="1" y="273" w="27" h="23" originx="2" originy="7"
+frame duration="0.05" x="31" y="261" w="34" h="30" originx="0" originy="13"
+frame duration="0.05" x="67" y="254" w="64" h="30" originx="14" originy="15"
+frame duration="0.05" x="136" y="253" w="48" h="28" originx="15" originy="15"
+frame duration="0.05" x="192" y="253" w="38" h="26" originx="15" originy="15"
+frame duration="0.05" x="239" y="252" w="19" h="27" originx="15" originy="16"

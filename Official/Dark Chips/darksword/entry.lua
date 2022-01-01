@@ -19,7 +19,8 @@ function package_init(package)
     props.description = "USE LARGE SWORD AND SLICE"
 	props.card_class = CardClass.Dark
 	props.limit = 1
-	props.long_description = "A Dark Chip, said to drag you down to hell- er. Murkland."
+	props.long_description = "A Dark Chip. Slashes 3x2 ahead, but forces you to move forward constantly when not inputting."
+	props.can_boost = false
 end
 
 function card_create_action(actor, props)
@@ -27,7 +28,7 @@ function card_create_action(actor, props)
     local action = Battle.CardAction.new(actor, "PLAYER_SWORD")
 	action:set_lockout(make_animation_lockout())
     action.execute_func = function(self, user)
-		self:add_anim_action(3,
+		self:add_anim_action(2,
 			function()
 				local hilt = self:add_attachment("HILT")
 				local hilt_sprite = hilt:sprite()
@@ -87,6 +88,14 @@ function card_create_action(actor, props)
 				actor:get_field():spawn(fx, tile)
 			end
 		)
+		local move_bug = Battle.Component.new(user, Lifetimes.Battlestep)
+		move_bug.update_func = function(self, dt)
+			local owner = self:get_owner()
+			if not owner:is_teleporting() and not(owner:input_has(Input.Pressed.Left) or owner:input_has(Input.Held.Left) or owner:input_has(Input.Pressed.Up) or owner:input_has(Input.Held.Up) or owner:input_has(Input.Pressed.Down) or owner:input_has(Input.Held.Down) or owner:input_has(Input.Held.Use) or owner:input_has(Input.Pressed.Shoot) or owner:input_has(Input.Held.Shoot) or owner:input_has(Input.Pressed.Special) or owner:input_has(Input.Held.Special)) then
+				owner:teleport(owner:get_tile(owner:get_facing(), 1), ActionOrder.Voluntary)
+			end
+		end
+		user:register_component(move_bug)
 	end
     return action
 end

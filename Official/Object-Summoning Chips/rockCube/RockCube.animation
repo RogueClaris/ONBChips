@@ -1,0 +1,20 @@
+imagePath="C:/Users/Owner/Desktop/ONB Play/Release/resources/mods/libs/present/RockCube.png"
+
+animation state="SPAWN"
+frame duration="0.1" x="7" y="8" w="30" h="5" originx="15" originy="36"
+frame duration="0.1" x="44" y="8" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="82" y="8" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="120" y="8" w="32" h="40" originx="16" originy="36"
+frame duration="0.1" x="158" y="8" w="32" h="40" originx="16" originy="36"
+
+animation state="DEFAULT"
+frame duration="0.05" x="196" y="8" w="32" h="40" originx="16" originy="36"
+
+animation state="BREAK L"
+frame duration="99" x="242" y="16" w="15" h="28" originx="10" originy="14"
+
+animation state="BREAK R"
+frame duration="99" x="265" y="15" w="30" h="26" originx="10" originy="13"
+
+animation state="HIDE"
+frame duration="0.05" x="1" y="0" w="3" h="3" originx="0" originy="0"

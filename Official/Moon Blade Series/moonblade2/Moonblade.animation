@@ -1,7 +1,0 @@
-imagePath="C:/Users/Owner/Desktop/ONB Dev/OpenNetBattle/build/Debug/resources/mods/cards/moonblade/Moonblade.png"
-
-animation state="DEFAULT"
-frame duration="0.075" x="4" y="1" w="104" h="68" originx="52" originy="34"
-frame duration="0.075" x="2" y="79" w="109" h="72" originx="55" originy="36"
-frame duration="0.075" x="123" y="7" w="105" h="53" originx="47" originy="27"
-frame duration="0.075" x="203" y="96" w="13" h="42" originx="-38" originy="21"

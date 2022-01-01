@@ -26,7 +26,7 @@ function card_create_action(actor, props)
     local action = Battle.CardAction.new(actor, "PLAYER_SWORD")
 	action:set_lockout(make_animation_lockout())
     action.execute_func = function(self, user)
-		self:add_anim_action(3,
+		self:add_anim_action(2,
 			function()
 				local hilt = self:add_attachment("HILT")
 				local hilt_sprite = hilt:sprite()
@@ -51,7 +51,7 @@ function card_create_action(actor, props)
 
 		self:add_anim_action(3,
 			function()
-				local sword = create_slash(user, "WIDE")
+				local sword = create_slash(user, props)
 				local tile = user:get_tile(user:get_facing(), 1)
 				local sharebox1 = Battle.SharedHitbox.new(sword, 0.15)
 				sharebox1:set_hit_props(sword:copy_hit_props())
@@ -79,7 +79,7 @@ function card_create_action(actor, props)
     return action
 end
 
-function create_slash(user, animation_state)
+function create_slash(user, props)
 	local spell = Battle.Spell.new(user:get_team())
 	spell:set_facing(user:get_facing())
 	spell:highlight_tile(Highlight.Flash)
@@ -89,7 +89,7 @@ function create_slash(user, animation_state)
 	end
 	spell:set_hit_props(
 		HitProps.new(
-			DAMAGE,
+			props.damage,
 			Hit.Impact | Hit.Flinch | Hit.Flash | Hit.Drag,
 			Element.Sword,
 			user:get_context(),

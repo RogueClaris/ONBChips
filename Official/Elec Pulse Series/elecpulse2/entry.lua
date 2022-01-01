@@ -19,8 +19,8 @@ function package_init(package)
     props.damage = DAMAGE
     props.time_freeze = false
     props.element = Element.Elec
-    props.description = "Sprd elec pulse. Pul enemy in"
-	props.limit = 1
+    props.description = "Sprd puls Pul enmy in!"
+	props.limit = 3
 end
 
 function card_create_action(actor, props)
@@ -28,7 +28,8 @@ function card_create_action(actor, props)
     local action = Battle.CardAction.new(actor, "PLAYER_SHOOTING")
 	action:override_animation_frames(FRAMES)
 	action:set_lockout(make_animation_lockout())
-    action.execute_func = function(self, user)
+    local cannonshot = create_pulse(actor, props)
+	action.execute_func = function(self, user)
 		local buster = self:add_attachment("BUSTER")
 		buster:sprite():set_texture(TEXTURE, true)
 		buster:sprite():set_layer(-1)
@@ -37,55 +38,78 @@ function card_create_action(actor, props)
 		buster_anim:load(_modpath.."elecpulse.animation")
 		buster_anim:set_state("BUSTER")
 		
-		local cannonshot = create_pulse("PULSE", user)
+		local fx = buster:add_attachment("PULSE")
+		fx:sprite():set_texture(TEXTURE, true)
+		fx:sprite():set_layer(-2)
+		
+		local fx_anim = fx:get_animation()
+		fx_anim:load(_modpath.."elecpulse.animation")
+		fx_anim:set_state("PULSE")
+		
 		local tile = user:get_tile(user:get_facing(), 1)
 		actor:get_field():spawn(cannonshot, tile)
+		
+		fx_anim:on_complete(function()
+			fx:erase()
+		end)
+	end
+	action.action_end_func = function(self)
+		cannonshot:erase()
 	end
     return action
 end
 
-function create_pulse(animation_state, user)
+function create_pulse(user, props)
     local spell = Battle.Spell.new(user:get_team())
-    spell:set_texture(TEXTURE, true)
 	spell:highlight_tile(Highlight.Solid)
 	spell:set_facing(user:get_facing())
-	spell:set_offset(45.0, -54.0)
 	local direction = user:get_facing()
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
-            Hit.Impact | Hit.Stun | Hit.Drag | Hit.Pierce, 
+            props.damage, 
+            Hit.Impact | Hit.Drag | Hit.Pierce, 
             Element.Elec,
             user:get_context(),
             Drag.new(Direction.reverse(direction), 1)
         )
     )
-	
-    local anim = spell:get_animation()
-    anim:load(_modpath.."elecpulse.animation")
-    anim:set_state(animation_state)
-	spell:get_animation():on_complete(
-		function()
-			spell:erase()
-		end
-	)
+	local sharebox1 = Battle.SharedHitbox.new(spell, 1.2)
+	sharebox1:set_hit_props(spell:copy_hit_props())
+	local sharebox2 = Battle.SharedHitbox.new(spell, 1.2)
+	sharebox2:set_hit_props(spell:copy_hit_props())
+	local sharebox3 = Battle.SharedHitbox.new(spell, 1.2)
+	sharebox3:set_hit_props(spell:copy_hit_props())
+	local field = user:get_field()
+	local do_once = true
     spell.update_func = function(self, dt)
 		local tile = spell:get_current_tile():get_tile(direction, 1)
 		if tile and not tile:is_edge() then	
+			field:spawn(sharebox1, tile)
 			tile:highlight(Highlight.Solid)
-			tile:attack_entities(self)
 		end
 		local tile2 = tile:get_tile(Direction.Up, 1)
 		local tile3 = tile:get_tile(Direction.Down, 1)
 		if tile2 and not tile2:is_edge() then	
+			field:spawn(sharebox2, tile2)
 			tile2:highlight(Highlight.Solid)
-			tile2:attack_entities(self)
 		end
 		if tile3 and not tile3:is_edge() then	
+			field:spawn(sharebox3, tile3)
 			tile3:highlight(Highlight.Solid)
-			tile3:attack_entities(self)
 		end
-        spell:get_current_tile():attack_entities(self)
+		if do_once then
+			if tile and not tile:is_edge() then	
+				field:spawn(sharebox1, tile)
+			end
+			if tile2 and not tile2:is_edge() then	
+				field:spawn(sharebox2, tile2)
+			end
+			if tile3 and not tile3:is_edge() then	
+				field:spawn(sharebox3, tile3)
+			end
+			do_once = false
+			spell:get_current_tile():attack_entities(self)
+		end
     end
 	spell.collision_func = function(self, other)
 	end
@@ -99,7 +123,7 @@ function create_pulse(animation_state, user)
     spell.can_move_to_func = function(tile)
         return true
     end
-
+	
 	Engine.play_audio(AUDIO, AudioPriority.Low)
 
     return spell

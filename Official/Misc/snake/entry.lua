@@ -49,7 +49,7 @@ function card_create_action(actor, props)
 				DO_ONCE = true
 				for i = 1, #tile_array, 1 do
 					Engine.play_audio(APPEAR, AudioPriority.Low)
-					local snake = spawn_snake(user)
+					local snake = spawn_snake(user, props)
 					field:spawn(snake, tile_array[i])
 				end
 			end
@@ -62,7 +62,7 @@ function card_create_action(actor, props)
     return action
 end
 
-function spawn_snake(user)
+function spawn_snake(user, props)
 	local spell = Battle.Spell.new(user:get_team())
 	spell:set_texture(TEXTURE, true)
 	spell:set_facing(user:get_facing())
@@ -72,7 +72,7 @@ function spawn_snake(user)
 	SNAKE_FINISHED = false
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
+            props.damage, 
             Hit.Impact | Hit.Flinch, 
             Element.Wood,
             user:get_context(),

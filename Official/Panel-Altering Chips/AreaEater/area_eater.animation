@@ -1,0 +1,14 @@
+imagePath="C:/Users/seven/Downloads/WarRock_exeOSS_battle.png"
+
+animation state="APPEAR"
+frame duration="0.05" x="94" y="69" w="50" h="62" originx="30" originy="60"
+frame duration="0.05" x="159" y="69" w="51" h="62" originx="30" originy="60"
+frame duration="0.05" x="226" y="71" w="51" h="60" originx="30" originy="58"
+frame duration="0.2" x="286" y="73" w="51" h="58" originx="30" originy="56"
+
+animation state="SLAP"
+frame duration="0.3" x="3" y="132" w="54" h="78" originx="30" originy="76"
+frame duration="0.05" x="68" y="141" w="64" h="69" originx="30" originy="67"
+frame duration="0.05" x="143" y="151" w="82" h="59" originx="30" originy="57"
+frame duration="0.05" x="233" y="137" w="57" h="73" originx="30" originy="71"
+frame duration="0.05" x="299" y="139" w="57" h="71" originx="30" originy="69"

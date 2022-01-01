@@ -46,14 +46,14 @@ function card_create_action(actor, props)
 		end
 		Engine.play_audio(AUDIO, AudioPriority.Low)
 		for i = 1, #tile_array, 1 do
-			local knife = spawn_knife(user)
+			local knife = spawn_knife(user, props)
 			field:spawn(knife, tile_array[i])
 		end
 	end
     return action
 end
 
-function spawn_knife(user)
+function spawn_knife(user, props)
 	local spell = Battle.Spell.new(user:get_team())
 	spell:set_texture(TEXTURE, true)
 	spell:set_facing(user:get_facing())
@@ -62,7 +62,7 @@ function spawn_knife(user)
     spell.slide_started = false
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
+            props.damage, 
             Hit.Impact | Hit.Flinch, 
             Element.Sword,
             user:get_context(),
