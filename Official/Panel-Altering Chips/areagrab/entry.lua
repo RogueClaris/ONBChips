@@ -29,16 +29,21 @@ function card_create_action(actor, props)
     action.execute_func = function(self, user)
         print("in custom card action execute_func()!")
 		self.tile = nil
-		if user:get_team() == Team.Red then 
-			self.tile = user:get_field():tile_at(2, 2)
+		local opposite_team = Team.Blue
+		if user:get_team() == Team.Red then
+			if user:get_facing() == Direction.Right then
+				self.tile = user:get_field():tile_at(1, 2)
+			else
+				self.tile = user:get_field():tile_at(6, 2)
+			end
 		else
-			self.tile = user:get_field():tile_at(5, 2)
+			opposite_team = Team.Red
+			self.tile = user:get_field():tile_at(6, 2)
 		end
 		self.dir = user:get_facing()
 		self.tile_array = {nil, nil, nil}
 		self.count = 1
 		self.max = 6
-		
 		local ref = self
 		local tile_front = nil
 		local tile_up = nil
@@ -57,9 +62,9 @@ function card_create_action(actor, props)
 			tile_up = tile_front:get_tile(Direction.Up, 1)
 			tile_down = tile_front:get_tile(Direction.Down, 1)
 			
-			check_front = tile_front and tile_front:get_team() ~= user:get_team() and not tile_front:is_edge()
-			check_up = tile_up and tile_up:get_team() ~= user:get_team() and not tile_up:is_edge()
-			check_down = tile_down and tile_down:get_team() ~= user:get_team() and not tile_down:is_edge()
+			check_front = tile_front and not user:is_team(tile_front:get_team()) and not tile_front:is_edge() and not tile_front:get_team() ~= Team.Other and tile_front:get_tile(user:get_facing(), 1):get_team() == opposite_team
+			check_up = tile_up and not user:is_team(tile_up:get_team()) and not tile_up:is_edge() and not tile_up:get_team() ~= Team.Other and tile_up:get_tile(user:get_facing(), 1):get_team() == opposite_team
+			check_down = tile_down and not user:is_team(tile_down:get_team()) and not tile_down:is_edge() and not tile_down:get_team() ~= Team.Other and tile_down:get_tile(user:get_facing(), 1):get_team() == opposite_team
 			
 			if check_front or check_up or check_down then
 				ref.tile_array[0] = tile_front
@@ -102,27 +107,25 @@ function MakeTileSplash(user)
 	local anim = artifact:get_animation()
 	anim:load(_modpath.."areagrab.animation")
 	anim:set_state("FALL")
-	artifact:set_offset(0.0, -128.0)
+	artifact:set_offset(0.0, -296.0)
 	artifact:sprite():set_layer(-1)
 	local doOnce = false
 	artifact.update_func = function(self, dt)
-		if self:get_offset().y >= 0 then
+		if self:get_offset().y >= -24 then
 			if not doOnce then
+				self:set_offset(0.0, 0.0)
 				self:get_animation():set_state("EXPAND")
-				if not self:get_current_tile():is_reserved({}) then
-					self:get_current_tile():set_team(user:get_team(), false)
-				else
-					local hitbox = Battle.Hitbox.new(user:get_team())
-					local props = HitProps.new(
-						10, 
-						Hit.Impact,
-						Element.None,
-						user:get_id(),
-						Drag.None
-					)
-					hitbox:set_hit_props(props)
-					user:get_field():spawn(hitbox, self:get_current_tile())
-				end
+				self:get_current_tile():set_team(user:get_team(), false)
+				local hitbox = Battle.Hitbox.new(user:get_team())
+				local props = HitProps.new(
+					10, 
+					Hit.Impact,
+					Element.None,
+					user:get_id(),
+					Drag.None
+				)
+				hitbox:set_hit_props(props)
+				user:get_field():spawn(hitbox, self:get_current_tile())
 				doOnce = true
 			end
 			self:get_animation():on_complete(
@@ -131,7 +134,7 @@ function MakeTileSplash(user)
 				end
 			)
 		else
-			self:set_offset(0.0, self:get_offset().y + 6.0)
+			self:set_offset(0.0, self:get_offset().y + 8.0)
 		end
 	end
 	artifact.delete_func = function(self)
