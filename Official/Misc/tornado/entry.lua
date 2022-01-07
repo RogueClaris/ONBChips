@@ -8,7 +8,7 @@ local AUDIO = Engine.load_audio(_modpath.."sfx.ogg")
 local FRAME1 = {1, 0.1}
 local FRAME2 = {2, 0.05}
 local FRAME3 = {3, 0.05}
-local FRAMES = make_frame_data({FRAME1, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3})
+local FRAMES = make_frame_data({FRAME1, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME3, FRAME2, FRAME1})
 
 function package_init(package) 
     package:declare_package_id("com.claris.chip.Tornado")
@@ -37,15 +37,18 @@ function card_create_action(actor, props)
 		local buster_anim = buster:get_animation()
 		buster_anim:load(_modpath.."buster_fan.animation")
 		buster_anim:set_state("DEFAULT")
+		buster_anim:refresh(buster:sprite())
+		buster_anim:set_playback(Playback.Loop)
 		
-		local cannonshot = create_attack(user)
+		local cannonshot = create_attack(user, props)
 		local tile = user:get_tile(user:get_facing(), 2)
 		actor:get_field():spawn(cannonshot, tile)
+		
 	end
     return action
 end
 
-function create_attack(user)
+function create_attack(user, props)
 	local spell = Battle.Spell.new(user:get_team())
 	spell.hits = 8
 	spell:set_facing(user:get_facing())
@@ -55,9 +58,9 @@ function create_attack(user)
 	local direction = user:get_facing()
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
+            props.damage,
             Hit.Impact | Hit.Flinch, 
-            Element.Wind,
+            props.element,
             user:get_context(),
             Drag.None
         )
@@ -65,6 +68,7 @@ function create_attack(user)
 	local anim = spell:get_animation()
     anim:load(_modpath.."spell_tornado.animation")
     anim:set_state("DEFAULT")
+	anim:refresh(spell:sprite())
 	spell.update_func = function(self, dt) 
 		self:get_current_tile():attack_entities(self)
     end
