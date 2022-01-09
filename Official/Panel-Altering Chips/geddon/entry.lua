@@ -43,21 +43,29 @@ function card_create_action(actor, props)
 					if #tile_array > 0 then
 						local index = math.random(1, #tile_array)
 						local tile2 = tile_array[index]
-						if tile2:get_state() ~= TileState.Broken and tile2:get_state() ~= TileState.Cracked then
+						if tile2:get_state() ~= TileState.Broken then
 							local fx = Battle.Artifact.new()
 							fx:set_texture(TEXTURE, true)
 							fx:get_animation():load(_modpath.."poof.animation")
 							fx:get_animation():set_state("DEFAULT")
+							fx:get_animation():refresh(fx:sprite())
 							fx:get_animation():on_complete(function()
 								fx:erase()
 							end)
-							field:spawn(fx, tile2)
-							if not tile2:is_reserved({}) then
-								tile2:set_state(TileState.Broken)
-							else
-								tile2:set_state(TileState.Cracked)
+							local query = function(ent)
+								if Battle.Character.from(ent) ~= nil or Battle.Obstacle.from(ent) ~= nil then
+									return true
+								end
 							end
-							Engine.play_audio(AUDIO, AudioPriority.Low)
+							if #tile2:find_entities(query) > 0 and tile2:get_state() ~= TileState.Cracked then
+								field:spawn(fx, tile2)
+								tile2:set_state(TileState.Cracked)
+								Engine.play_audio(AUDIO, AudioPriority.Low)
+							elseif #tile2:find_entities(query) == 0 and tile2:get_state() ~= TileState.Broken then
+								field:spawn(fx, tile2)
+								tile2:set_state(TileState.Broken)
+								Engine.play_audio(AUDIO, AudioPriority.Low)
+							end
 							table.remove(tile_array, index)
 						else
 							table.remove(tile_array, index)

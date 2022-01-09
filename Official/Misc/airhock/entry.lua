@@ -1,6 +1,5 @@
 nonce = function() end
 
-local DAMAGE = 60
 local TEXTURE = Engine.load_texture(_modpath.."puck.png")
 local LAUNCH_AUDIO = Engine.load_audio(_modpath.."pucklaunch.ogg")
 local BOUNCE_AUDIO = Engine.load_audio(_modpath.."puckhit.ogg")
@@ -15,54 +14,65 @@ function package_init(package)
 
     local props = package:get_card_props()
     props.shortname = "AirHock"
-    props.damage = DAMAGE
+    props.damage = 60
     props.time_freeze = false
     props.element = Element.Break
     props.description = "Bounce the puck off walls"
 	props.limit = 3
 end
 
-function card_create_action(actor, props)
-    local action = Battle.CardAction.new(actor, "PLAYER_SWORD")
+function card_create_action(user, props)
+    local action = Battle.CardAction.new(user, "PLAYER_SWORD")
 	
-	action:set_lockout(make_animation_lockout())
+	action:set_lockout(make_sequence_lockout())
 	
 	action.execute_func = function(self, user)
         local puck = nil
-		
-		self:add_anim_action(3,
-			function()
-				local hilt = self:add_attachment("HILT")
-				local hilt_sprite = hilt:sprite()
-				hilt_sprite:set_texture(actor:get_texture())
-				hilt_sprite:set_layer(-2)
-				hilt_sprite:enable_parent_shader(true)
+		local step1 = Battle.Step.new()
+		local ref = self
+		local do_once = true
+		local actor = self:get_actor()
 
-				local hilt_anim = hilt:get_animation()
-				hilt_anim:copy_from(actor:get_animation())
-				hilt_anim:set_state("HAND")
-			end
-		)
-		
-		if puck == nil then
-			self:add_anim_action(3, 
-				function()
-					puck = create_puck(user)
-					local tile = user:get_tile(user:get_facing(), 1)
-					user:get_field():spawn(puck, tile)
+		step1.update_func = function(self, dt)
+			if do_once then
+				do_once = false
+				ref:add_anim_action(2, function()
+					user:toggle_counter(true)
+					local hilt = ref:add_attachment("HILT")
+					local hilt_sprite = hilt:sprite()
+					hilt_sprite:set_texture(actor:get_texture())
+					hilt_sprite:set_layer(-2)
+					hilt_sprite:enable_parent_shader(true)
+
+					local hilt_anim = hilt:get_animation()
+					hilt_anim:copy_from(actor:get_animation())
+					hilt_anim:set_state("HAND")
+					hilt_anim:refresh(hilt_sprite)
+				end)
+				
+				if puck == nil then
+					ref:add_anim_action(3, function()
+						puck = create_puck(user, props, step1)
+						local tile = user:get_tile(user:get_facing(), 1)
+						user:get_field():spawn(puck, tile)
+					end)
 				end
-			)
-        end
+				ref:add_anim_action(4, function()
+					user:toggle_counter(false)
+				end)
+			end
+		end
+		self:add_step(step1)
 	end
     return action
 end
 
-function create_puck(user)
+function create_puck(user, props, step)
     local spell = Battle.Spell.new(user:get_team())
 	local tileCount = 12
     spell:set_texture(TEXTURE, true)
     spell:highlight_tile(Highlight.Flash)
-	spell:set_offset(16.0, -16.0) --Doing my best to center the puck on the tile.
+	spell:set_offset(-32, -32) --Doing my best to center the puck on the tile.
     spell.slide_started = false
 	local direction = Direction.DownRight
 	if user:get_current_tile():get_tile(Direction.Down, 1):is_edge() then
@@ -76,8 +86,8 @@ function create_puck(user)
 	end
     spell:set_hit_props(
         HitProps.new(
-            DAMAGE, 
-            Hit.Impact | Hit.Flinch | Hit.Breaking | Hit.Shake | Hit.Flash,
+            props.damage, 
+            Hit.Impact | Hit.Flinch | Hit.Breaking | Hit.Shake,
             Element.Break,
             user:get_context(),
             Drag.None
@@ -105,6 +115,7 @@ function create_puck(user)
 		fx:set_texture(PARTICLE_TEXTURE, true)
 		fx:get_animation():load(_modpath.."artifact_impact_fx.animation")
 		fx:get_animation():set_state("BLUE")
+		fx:get_animation():refresh(fx:sprite())
 		fx:get_animation():on_complete(function()
 			fx:erase()
 		end)
@@ -114,6 +125,7 @@ function create_puck(user)
     end
 
     spell.delete_func = function(self)
+		step:complete_step()
 		if not spell:get_current_tile():is_edge() then
 			--if we're not on an edge tile, which happens mostly at the end of battle for some reason,
 			--then spawn a mob move to visually vanish the puck when it deletes.
@@ -122,6 +134,7 @@ function create_puck(user)
 			fx:set_texture(MOB_MOVE_TEXTURE, true)
 			fx:get_animation():load(_modpath.."mob_move.animation")
 			fx:get_animation():set_state("DEFAULT")
+			fx:get_animation():refresh(fx:sprite())
 			fx:get_animation():on_complete(function()
 				fx:erase()
 			end)

@@ -1,6 +1,16 @@
-imagePath="C:/Users/Bountyhunter/Code/mmbn/BattleNetwork/resources/spells/spell_tornado.png"
+imagePath="spell_tornado.png"
 
 animation state="DEFAULT"
 frame duration="0.05" x="0" y="0" w="31" h="49" originx="13" originy="48"
 frame duration="0.05" x="32" y="0" w="27" h="49" originx="14" originy="48"
 frame duration="0.05" x="64" y="0" w="28" h="50" originx="13" originy="48"
+
+animation state="FIRE"
+frame duration="0.05" x="0" y="50" w="31" h="49" originx="18" originy="48"
+frame duration="0.05" x="32" y="50" w="27" h="49" originx="15" originy="48"
+frame duration="0.05" x="61" y="50" w="28" h="49" originx="14" originy="48"
+
+animation state="WOOD"
+frame duration="0.05" x="1" y="98" w="31" h="49" originx="18" originy="48"
+frame duration="0.05" x="33" y="98" w="27" h="49" originx="15" originy="48"
+frame duration="0.05" x="62" y="98" w="28" h="49" originx="14" originy="48"

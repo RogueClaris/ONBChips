@@ -1,0 +1,7 @@
+imagePath="C:/Users/seven/Desktop/ONB Play/Release Latest/resources/mods/cards/DarkCircle/cursor.png"
+
+animation state="SEARCH"
+frame duration="0.05" x="0" y="0" w="26" h="28" originx="13" originy="22"
+
+animation state="FOUND"
+frame duration="0.05" x="29" y="0" w="26" h="28" originx="13" originy="22"
