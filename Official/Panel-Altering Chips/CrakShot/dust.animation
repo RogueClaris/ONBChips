@@ -1,0 +1,8 @@
+imagePath="dust.png"
+
+animation state="DEFAULT"
+frame duration="0.05" x="0" y="0" w="59" h="43" originx="21" originy="33"
+frame duration="0.067" x="59" y="0" w="59" h="43" originx="21" originy="33"
+frame duration="0.067" x="118" y="0" w="59" h="43" originx="21" originy="33"
+frame duration="0.034" x="0" y="43" w="59" h="43" originx="21" originy="33"
+frame duration="0.034" x="59" y="43" w="59" h="43" originx="21" originy="33"

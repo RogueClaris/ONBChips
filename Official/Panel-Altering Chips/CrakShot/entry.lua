@@ -1,8 +1,5 @@
 nonce = function() end
 
-local TEXTURE = Engine.load_texture(_modpath.."spell_panel_shot.png")
-local AUDIO = Engine.load_audio(_modpath.."sfx.ogg")
-
 function package_init(package) 
     package:declare_package_id("com.Dawn.card.CrackShoot")
     package:set_icon_texture(Engine.load_texture(_modpath.."icon.png"))
@@ -26,7 +23,6 @@ function card_create_action(actor, props)
 	action.execute_func = function(self, user)
         local panel = nil
 		local tile = user:get_tile(user:get_facing(), 1)
-		
 		self:add_anim_action(2, function()
 			local hilt = self:add_attachment("HILT")
 			local hilt_sprite = hilt:sprite()
@@ -61,12 +57,23 @@ function create_attack(user, props, tile)
 	end
 	spell:set_facing(user:get_facing())
 	if tile then
+		local dust_fx = Battle.Artifact.new()
+		dust_fx:set_texture(Engine.load_texture(_modpath.."dust.png"), true)
+		dust_fx:set_facing(user:get_facing())
+		local dust_anim = dust_fx:get_animation()
+		dust_anim:load(_modpath.."dust.animation")
+		dust_anim:set_state("DEFAULT")
+		dust_anim:refresh(dust_fx:sprite())
+		dust_anim:on_complete(function()
+			dust_fx:erase()
+		end)
+		user:get_field():spawn(dust_fx, tile)
 		if tile:is_reserved({}) and tile:is_walkable() then
 			tile:set_state(TileState.Cracked)
 			spell:erase()
 		elseif not tile:is_reserved({}) and tile:is_walkable() then
 			tile:set_state(TileState.Broken)
-			spell:set_texture(TEXTURE, true)
+			spell:set_texture(Engine.load_texture(_modpath.."spell_panel_shot.png"), true)
 			spell.slide_started = false
 			spell:set_hit_props(
 				HitProps.new(
@@ -83,29 +90,35 @@ function create_attack(user, props, tile)
 			else
 				spell:get_animation():set_state("RED_TEAM")
 			end
+			spell:set_offset(0, 24)
+			spell:get_animation():refresh(spell:sprite())
 			spell:get_animation():on_complete(function()
 				spell:get_animation():set_playback(Playback.Loop)
 			end)
 			spell.update_func = function(self, dt) 
 				self:get_current_tile():attack_entities(self)
-				if self:is_sliding() == false then
-					if self:get_current_tile():is_edge() and self.slide_started then 
-						self:delete()
-					end 
-					
-					local dest = self:get_tile(spell:get_facing(), 1)
-					local ref = self
-					self:slide(dest, frames(5), frames(0), ActionOrder.Voluntary, 
-						function()
-							ref.slide_started = true 
-						end
-					)
+				if self:get_offset().y <= 0 then
+					if self:is_sliding() == false then
+						if self:get_current_tile():is_edge() and self.slide_started then 
+							self:delete()
+						end 
+						
+						local dest = self:get_tile(spell:get_facing(), 1)
+						local ref = self
+						self:slide(dest, frames(5), frames(0), ActionOrder.Voluntary, 
+							function()
+								ref.slide_started = true 
+							end
+						)
+					end
+				else
+					self:set_offset(self:get_offset().x, self:get_offset().y - 4)
 				end
 			end
 			spell.collision_func = function(self, other)
 				self:delete()
 			end
-			Engine.play_audio(AUDIO, AudioPriority.Low)
+			Engine.play_audio(Engine.load_audio(_modpath.."sfx.ogg"), AudioPriority.Low)
 		end
 	end
 	spell.delete_func = function(self)
