@@ -1,19 +1,14 @@
 nonce = function() end
 
-local DAMAGE = 300
-local TEXTURE = Engine.load_texture(_modpath.."Formortiis.png")
-local AUDIO = Engine.load_audio(_modpath.."Formortiis.ogg")
-local EXPLOSION_TEXTURE = Engine.load_texture(_modpath.."spell_explosion.png")
-
 function package_init(package) 
 	package:declare_package_id("com.Dawn.FireEmblem.Formortiis")
 	package:set_icon_texture(Engine.load_texture(_modpath.."icon.png"))
 	package:set_preview_texture(Engine.load_texture(_modpath.."preview.png"))
-	package:set_codes({'D', 'F', 'L'})
-
+	package:set_codes({'F'})
+	
 	local props = package:get_card_props()
 	props.shortname = "Ravager"
-	props.damage = DAMAGE
+	props.damage = 300
 	props.time_freeze = true
 	props.element = Element.Break
 	props.description = "DEMON KING SHATTERS"
@@ -49,43 +44,78 @@ function card_create_action(actor, props)
 			end
 		end
 		local do_once = true
-		local cooldown = 1
+		local do_once_again = true
+		local cooldown = 0.5
+		local is_finished = false
+		local ref = self
 		step1.update_func = function(self, dt)
 			if do_once then
 				user:hide()
 				do_once = false
-				Engine.play_audio(AUDIO, AudioPriority.Low)
-				local formortiis = Battle.Artifact.new()
-				formortiis:set_facing(user:get_facing())
-				formortiis:set_texture(TEXTURE, true)
-				formortiis:sprite():set_layer(-1)
+				Engine.play_audio(Engine.load_audio(_modpath.."Formortiis.ogg"), AudioPriority.Low)
+				ref.formortiis = Battle.Artifact.new()
+				ref.formortiis:set_facing(user:get_facing())
+				ref.formortiis:set_texture(Engine.load_texture(_modpath.."Formortiis.png"), true)
+				ref.formortiis:sprite():set_layer(-1)
 				
-				local boss_anim = formortiis:get_animation()
+				local boss_anim = ref.formortiis:get_animation()
 				boss_anim:load(_modpath.."Formortiis.animation")
 				boss_anim:set_state("BODY")
+				boss_anim:refresh(ref.formortiis:sprite())
 				
+				ref.arm = Battle.Artifact.new()
+				ref.arm:set_facing(user:get_facing())
+				ref.arm:set_texture(TEXTURE, true)
+				ref.arm:sprite():set_layer(-2)
 				
-				local arm = Battle.Artifact.new()
-				arm:set_facing(user:get_facing())
-				arm:set_texture(TEXTURE, true)
-				arm:sprite():set_layer(-2)
-				
-				local arm_anim = arm:get_animation()
+				local arm_anim = ref.arm:get_animation()
 				arm_anim:load(_modpath.."Formortiis.animation")
-				arm_anim:set_state("ARM")
+				arm_anim:set_state("ARM_IDLE")
+				arm_anim:refresh(ref.arm:sprite())
+				ref.original_offset_arm = ref.arm:get_offset()
+				ref.original_offset_body = ref.formortiis:get_offset()
+				if user:get_facing() == Direction.Right then
+					ref.formortiis:set_offset(ref.original_offset_body.x + 100, ref.original_offset_body.y + 100)
+					ref.arm:set_offset(ref.original_offset_arm.x + 100, ref.original_offset_arm.y + 100)
+				else
+					ref.formortiis:set_offset(-100, 100)
+					ref.arm:set_offset(-100, 100)
+				end
 				
-				arm_anim:on_complete(function()
-					arm:erase()
-					formortiis:erase()
-					user:reveal()
-					for k = 1, #tile_array, 1 do
-						local spell = create_attack(user, props)
-						field:spawn(spell, tile_array[k])
-						step1:complete_step()
+				field:spawn(ref.formortiis, tile)
+				field:spawn(ref.arm, tile)
+			end
+			if user:get_facing() == Direction.Right then
+				if ref.formortiis:get_offset() ~= ref.original_offset_body and ref.arm:get_offset() ~= ref.original_offset_arm then
+					ref.formortiis:set_offset(ref.formortiis:get_offset().x - 0.5, ref.formortiis:get_offset().y - 0.5)
+					ref.arm:set_offset(ref.arm:get_offset().x - 0.5, ref.arm:get_offset().y - 0.5)
+				else
+					if do_once_again then
+						do_once_again = false
+						ref.arm:get_animation():set_state("ARM")
+						ref.arm:get_animation():on_complete(function()
+							is_finished = true
+							for k = 1, #tile_array, 1 do
+								local spell = create_attack(user, props)
+								field:spawn(spell, tile_array[k])
+							end
+						end)
 					end
-				end)
-				field:spawn(formortiis, tile)
-				field:spawn(arm, tile)
+				end
+			else
+				ref.formortiis:set_offset(ref.formortiis:get_offset().x - 2, ref.formortiis:get_offset().y - 2)
+				ref.arm:set_offset(ref.arm:get_offset().x - 2, ref.arm:get_offset().y - 2)
+			end
+			if is_finished then
+				if cooldown <= 0 then
+					ref.arm:erase()
+					ref.formortiis:erase()
+					user:reveal()
+					step1:complete_step()
+					is_finished = false
+				else
+					cooldown = cooldown - dt
+				end
 			end
 		end
 		self:add_step(step1)
@@ -96,7 +126,7 @@ end
 function create_attack(user, props)
 	local spell = Battle.Spell.new(user:get_team())
 	spell:set_facing(user:get_facing())
-	spell:set_texture(EXPLOSION_TEXTURE, true)
+	spell:set_texture(Engine.load_texture(_modpath.."spell_explosion.png"), true)
     spell:set_hit_props(
         HitProps.new(
             props.damage,

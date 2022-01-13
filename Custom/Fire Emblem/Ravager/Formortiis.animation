@@ -1,12 +1,15 @@
-imagePath="C:/Users/seven/Desktop/ONB Play/Release Latest/resources/mods/cards/Formortiis/Formortiis.png"
+imagePath="Formortiis.png"
 
 animation state="BODY"
 frame duration="99" x="298" y="490" w="241" h="144" originx="54" originy="94"
-point label="ARM" x="44" y="44"
+point label="ARM" x="30" y="50"
 
 animation state="ARM"
-frame duration="0.075" x="21" y="665" w="68" h="122" originx="45" originy="64"
-frame duration="0.075" x="119" y="668" w="105" h="124" originx="21" originy="64"
-frame duration="0.075" x="253" y="694" w="146" h="78" originx="21" originy="64"
-frame duration="0.075" x="423" y="706" w="146" h="73" originx="21" originy="64"
-frame duration="0.075" x="602" y="709" w="144" h="70" originx="21" originy="64"
+frame duration="0.075" x="21" y="664" w="68" h="122" originx="54" originy="64"
+frame duration="0.075" x="119" y="668" w="105" h="124" originx="34" originy="64"
+frame duration="0.075" x="253" y="694" w="146" h="78" originx="34" originy="64"
+frame duration="0.075" x="423" y="706" w="146" h="73" originx="34" originy="64"
+frame duration="0.075" x="602" y="709" w="144" h="70" originx="34" originy="64"
+
+animation state="ARM_IDLE"
+frame duration="0.075" x="21" y="664" w="68" h="122" originx="54" originy="64"
