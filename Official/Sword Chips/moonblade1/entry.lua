@@ -78,35 +78,51 @@ function create_slash(animation_state, user, props)
     spell.update_func = function(self, dt) 
 		if self:get_current_tile():get_tile(Direction.UpLeft, 1) then
 			self:get_current_tile():get_tile(Direction.UpLeft, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.UpLeft, 1):attack_entities(self)
+			local hitbox_ul = Battle.Hitbox.new(spell:get_team())
+			hitbox_ul:set_hit_props(props)
+			field:spawn(hitbox_ul, self:get_current_tile():get_tile(Direction.UpLeft, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.Up, 1) then
 			self:get_current_tile():get_tile(Direction.Up, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.Up, 1):attack_entities(self)
+			local hitbox_u = Battle.Hitbox.new(spell:get_team())
+			hitbox_u:set_hit_props(props)
+			field:spawn(hitbox_u, self:get_current_tile():get_tile(Direction.Up, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.UpRight, 1) then
 			self:get_current_tile():get_tile(Direction.UpRight, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.UpRight, 1):attack_entities(self)
+			local hitbox_ur = Battle.Hitbox.new(spell:get_team())
+			hitbox_ur:set_hit_props(props)
+			field:spawn(hitbox_ur, self:get_current_tile():get_tile(Direction.UpRight, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.Right, 1) then
 			self:get_current_tile():get_tile(Direction.Right, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.Right, 1):attack_entities(self)
+			local hitbox_r = Battle.Hitbox.new(spell:get_team())
+			hitbox_r:set_hit_props(props)
+			field:spawn(hitbox_ur, self:get_current_tile():get_tile(Direction.Right, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.Left, 1) then
 			self:get_current_tile():get_tile(Direction.Left, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.Left, 1):attack_entities(self)
+			local hitbox_l = Battle.Hitbox.new(spell:get_team())
+			hitbox_l:set_hit_props(props)
+			field:spawn(hitbox_l, self:get_current_tile():get_tile(Direction.Left, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.DownLeft, 1) then
 			self:get_current_tile():get_tile(Direction.DownLeft, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.DownLeft, 1):attack_entities(self)
+			local hitbox_dl = Battle.Hitbox.new(spell:get_team())
+			hitbox_dl:set_hit_props(props)
+			field:spawn(hitbox_dl, self:get_current_tile():get_tile(Direction.DownLeft, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.Down, 1) then
 			self:get_current_tile():get_tile(Direction.Down, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.Down, 1):attack_entities(self)
+			local hitbox_d = Battle.Hitbox.new(spell:get_team())
+			hitbox_d:set_hit_props(props)
+			field:spawn(hitbox_d, self:get_current_tile():get_tile(Direction.Down, 1))
 		end
 		if self:get_current_tile():get_tile(Direction.DownRight, 1) then
 			self:get_current_tile():get_tile(Direction.DownRight, 1):highlight(Highlight.Flash)
-			self:get_current_tile():get_tile(Direction.DownRight, 1):attack_entities(self)
+			local hitbox_dr = Battle.Hitbox.new(spell:get_team())
+			hitbox_dr:set_hit_props(props)
+			field:spawn(hitbox_dr, self:get_current_tile():get_tile(Direction.DownRight, 1))
 		end
     end
 	spell.collision_func = function(self, other)
